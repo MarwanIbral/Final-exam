@@ -64,9 +64,82 @@ the gating function g as the squared L2 distance between the predictions
 
 The logarithm in  \cref{eq:my_eq3} computes
 the logit of the binary decision problem whether or not two
-pixels are (dis)similar. The tanh function then maps the logit
+pixels are (dis)similar. The \tanh function then maps the logit
 with the added bias from \mathbb{R} onto the interval [−1, 1]. Thus, $f$
 takes the values \text{-}1 and +1 when pixels are similar ($d$ = 0)
 and dissimilar ($d$ = 1) respectively, and μ controls the crossover
 point at which f changes sign.
+
+For two similar pixels, we have $f < 0$ and get $L_{fs} ≥ 0$
+since $g ≥ 0$. $L_{fs}$ is thus minimized if $g$ is minimized, i.e. if
+$a{i}$ = $a_{j}$ . In the case of two dissimilar pixels on the other
+hand, i.e. if $f > 0$, we have $L_{fs} ≤ 0$, which is minimized
+if g is maximized, and occurs when $a{i}$ and $a{j}$ are opposite
+predictions, i.e. if they are two one-hot vectors predicting
+different classes. However, it is not always the case that two
+dissimilar pixels are part of different classes. For example,
+an object could contain some high-frequency texture or be
+made up of several parts with different visual appearance.
+However, since the gating function is chosen to be the
+squared L2 distance, the gradient of Lfs with respect to
+the predictions is proportional to the difference between the
+predictions, and equal to zero if $a{i}$ = $a{j}$ . Consequently, if
+two pixels have similar predictions, only a small gradient is
+propagated through the feature similarity loss, and the total
+gradient is dominated by the classification loss. This allows
+the network to classify larger regions to the same class, even
+though they contain parts with dissimilar features. Thus, the
+network can activate over the whole extent of objects.
+
+
+We use RGB pixel values in [0, 1] for the features x, and
+choose the dissimilarity
+\begin{equation}
+    l_{fs}(a,x) = \frac{-\mathbf{1}}{(HW)^2} \sum_{ij}  \times w_{ij}g(a_{i}, a{j}) f(d(x_{i}, x{j}))  
+    \label{eq:my_eq4}
+\end{equation}
+which has been used in stereo matching [33], where $C = 3$
+is the dimensionality of the feature vectors. Although learnable
+features would allow for finding image-specific biases,
+they could potentially lead to trivial solutions or unwanted
+behaviours if combined with the classification loss, as we
+would essentially be learning the loss function. Therefore,
+we stick to RGB features.
+
+
+\section{EXPERIMENTS}
+\subsection{Implementation Details}
+
+
+\begin{figure}[H]
+    \centering
+    \begin{tabular}{cc}
+    \includegraphics[width=6cm]{image/image1.png} &
+    \includegraphics[width=6cm]{image/image2.png} \\
+    \end{tabular}
+    \caption{Caption}
+    \caption{Caption2}
+    \label{fig:my_label}
+\end{figure}
+
+\section{Tables}
+this is a ref of the tables : \cref{tab:my_label}.
+\begin{table*}[ht] %* pour centrer
+    \centering
+    \begin{tabular}{clccccc} %l pour alligner
+    \hline
+    & Names & Value \\
+    \hline
+    \multirow{2}{*}{}  \\
+    &Backebone& 5.827 \\
+   \multirow{3}{*}{ZED combinations} &ZED scan \\
+    
+    &ZED scan + ZED odom + IMU& 5.667\\
+    \hline
+    \end{tabular}
+    \caption{Caption}
+    \label{tab:my_label}
+\end{table*}
+
+\subsection{Ablation study}
 \end{document}
