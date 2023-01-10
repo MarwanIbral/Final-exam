@@ -1,6 +1,22 @@
-\documentclass{article}
+\documentclass[10pt,twocolumn,letterpaper]{article}
 \usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{nicefrac}
+\usepackage{algorithm}
+\usepackage[algo2e]{algorithm2e} 
+\usepackage{multirow}
+\usepackage[pagebackref,breaklinks,colorlinks]{hyperref}
+\usepackage{float}
 
+% Support for easy cross-referencing
+\usepackage[capitalize]{cleveref}
+\crefname{section}{Sec.}{Secs.}
+\Crefname{section}{Section}{Sections}
+\Crefname{table}{Table}{Tables}
+\crefname{table}{Tab.}{Tabs.}
 \title{Examen}
 \author{marwanibral }
 \date{January 2023}
@@ -12,5 +28,45 @@
 
 %% Here goes your code
 \maketitle
+let us define a gating function $g({a}_{i},{a}_{j}) : {R^2k} -> R_{+}$ which computes the distance between the predictions ${i}$ and ${j}$ of the pixels as well as a function $f(d) : [0,1] -> [-1,1]$ which maps the dissimilarity $d(x_{i}, x_{j})$ $\in$ [-1,1] between the
+features $d(x_{i}, x_{j})$ monotonically to $[−1,1]$. Inspired by bilateral filtering\cite{bilareral filtering} 32], which considers both geometric and
+photometric similarity, we formulate the feature similarity
+loss term
 
+\begin{equation}
+    l_{fs}(a,x) = \frac{-\mathbf{1}}{(HW)^2} \sum_{ij}  \times w_{ij}g(a_{i}, a{j}) f(d(x_{i}, x{j}))  
+    \label{eq:my_eq1}
+\end{equation}
+where $w_{ij}$ is a spatial weight which considers the distance
+between pixels $i$ and $j$ and is used to give a higher weight
+to pixel pairs which are close to each other. Note that $a_{i}$ and $x_{i}$ are vectors representing respectively the class probability
+distribution and image features for pixel $i$.Throughout
+our experiments we define the weights using a Gaussian
+neighbourhood
+
+\begin{equation}
+    l_{fs}(a,x) = \frac{-\mathbf{1}}{(HW)^2} \sum_{ij}  \times w_{ij}g(a_{i}, a{j}) f(d(x_{i}, x{j})) 
+    \label{eq:my_eq2}
+\end{equation}
+where $p_{i}$ and $p_{j}$ are two-dimensional vectors containing the
+image coordinates of pixels $i$ and $j$, and $σ$ is the standard
+deviation of the Gaussian function to control the size of the
+considered pixel neighbourhood. Furthermore, we define
+the gating function g as the squared L2 distance between the predictions
+
+
+ and the function $f$ as 
+
+\begin{equation}
+    l_{fs}(a,x) = \frac{-\mathbf{1}}{(HW)^2} \sum_{ij}  \times w_{ij}g(a_{i}, a{j}) f(d(x_{i}, x{j}))  
+    \label{eq:my_eq3}
+\end{equation}
+
+The logarithm in  \cref{eq:my_eq3} computes
+the logit of the binary decision problem whether or not two
+pixels are (dis)similar. The tanh function then maps the logit
+with the added bias from \mathbb{R} onto the interval [−1, 1]. Thus, $f$
+takes the values \text{-}1 and +1 when pixels are similar ($d$ = 0)
+and dissimilar ($d$ = 1) respectively, and μ controls the crossover
+point at which f changes sign.
 \end{document}
